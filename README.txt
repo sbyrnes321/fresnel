@@ -6,4 +6,4 @@ In addition to calculating how much light is transmitted and reflected, the prog
 
 It can also calculate the parameters measured in ellipsometry.
 
-For more information, see manual.pdf
+For more information, see manual.pdf . Get it directly at http://sjbyrnes.com/fresnel_manual.pdf
