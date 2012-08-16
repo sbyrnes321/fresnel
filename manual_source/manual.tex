@@ -209,7 +209,7 @@ $$R=|r|^2$$
 
 An interesting thing---which had me confused at first---is that the power entering the first layer of the stack (called \verb=power_entering= in the program) is \emph{not} necessarily equal to $1-R$, as one would expect (energy 1 moving forwards, minus energy $R$ moving backwards). Likewise, it is possible to have $R+T\neq 1$ for an interface between two semi-infinite media. This strange situation only comes up when the starting semi-infinite medium is absorbing. Why does this happen? To find out, read Appendix~\ref{appendixR}!
 
-For an interface between two semi-infinite media, \verb=power_entering= is always equal to $T$. When the incident semi-infinite medium has real refractive index, \verb=power_entering= is always equal to $1-R$. The difference between \verb=power_entering= and $1-R$ is related to an excess or deficit of absorption just before the interface, arising from interference between the incoming and reflected waves. $R$ is defined not by the power that \emph{doesn't} enter the medium, but by the power that \emph{does} enter the reflected wave. See Appendix~\ref{appendixR}.
+Quick summary of Appendix A: For an interface between two semi-infinite media, \verb=power_entering= is always equal to $T$. When the incident semi-infinite medium has real refractive index, \verb=power_entering= is always equal to $1-R$. The difference between \verb=power_entering= and $1-R$ is related to an excess or deficit of absorption just before the interface, arising from interference between the incoming and reflected waves. $R$ is defined not by the power that \emph{doesn't} enter the medium, but by the power that \emph{does} enter the reflected wave. See Appendix~\ref{appendixR}.
 
 \section{Absorbed energy density}
 Next, absorbed energy density at a given depth. In principle this has units of [power]/[volume], but we can express it as a multiple of incoming light power density on the material, which has units[power]/[area], so that absorbed energy density has units of 1/[length]. This is the negative derivative (with respect to distance) of the ``Poynting'' expressions above. Differentiating is straightforward, using $E_f(z) \propto e^{i k_z z}$ and $E_b(z) \propto e^{-i k_z z}$. (Here, $k_z=2\pi n\cos\theta/\lambda_{vac}$.) The result is:
@@ -260,12 +260,12 @@ We have a number of incoherent layers 0,1,...,$N-1$. Let $V_i$ be the forward pr
 $$Y_i = X_i R_{i,i+1} + W_{i+1} T_{i+1,i}$$
 $$V_{i+1} = X_i T_{i,i+1} + W_{i+1} R_{i+1,i}$$
 $$\smat X_i \\ Y_i \emat = \frac{1}{T_{i,i+1}} \smat 1 & -R_{i+1,i} \\  R_{i,i+1} & T_{i+1,i}T_i -  R_{i+1,i}R_{i,i+1} \emat \smat V_{i+1} \\ W_{i+1} \emat.$$
-Let $A_i$ be the fraction of light absorbed in a single pass through layer $i$, calculated by
-$$A_i = 1 - e^{-\alpha d_i}, \quad \alpha = \frac{4\pi \Im[n_i \cos \theta_i]}{\lambda_{vac}}$$
+Let $P_i$ be the fraction of light that passes successfully through layer $i$ (in a single pass) without getting absorbed, calculated by
+$$P_i = e^{-\alpha d_i}, \quad \alpha = \frac{4\pi \Im[n_i \cos \theta_i]}{\lambda_{vac}}$$
 where $d_i$ is the layer thickness. Then:
-$$\smat V_i \\ W_i \emat = \smat 1/(1-A_i) & 0 \\ 0 & 1-A_i \emat \smat X_i \\ Y_i \emat$$
+$$\smat V_i \\ W_i \emat = \smat 1/P_i & 0 \\ 0 & P_i \emat \smat X_i \\ Y_i \emat$$
 Define the matrices $L_n$ by
-$$L_n =  \frac{1}{T_{i,i+1}} \smat 1/(1-A_i) & 0 \\ 0 & 1-A_i \emat \smat 1 & -R_{i+1,i} \\  R_{i,i+1} & T_{i+1,i}T_{i,i+1} -  R_{i+1,i}R_{i,i+1} \emat$$
+$$L_n =  \frac{1}{T_{i,i+1}} \smat 1/P_i & 0 \\ 0 & P_i \emat \smat 1 & -R_{i+1,i} \\  R_{i,i+1} & T_{i+1,i}T_{i,i+1} -  R_{i+1,i}R_{i,i+1} \emat$$
 for $n=1,\ldots,N-1$. Now we want the matrix relating the intensities  entering the structure to the intensities exiting, i.e.:
 $$\smat 1 \\ R \emat = \tilde{L} \smat T \\ 0 \emat.$$
 Then the formula for $\tilde{L}$ is

@@ -678,13 +678,13 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
                                               th_list[all_from_stack[i][0]],
                                               lam_vac))
     
-    #A_list[i] is percent absorbed in a single pass through i'th incoherent
+    #P_list[i] is fraction not absorbed in a single pass through i'th incoherent
     #layer.
-    A_list = zeros(num_inc_layers)
+    P_list = zeros(num_inc_layers)
     for inc_index in xrange(1,num_inc_layers-1): #skip 0'th and last (infinite)
         i = all_from_inc[inc_index]
-        A_list[inc_index] = (1-exp(-4 * np.pi * d_list[i]
-                     * (n_list[i] * cos(th_list[i])).imag / lam_vac))
+        P_list[inc_index] = exp(-4 * np.pi * d_list[i]
+                     * (n_list[i] * cos(th_list[i])).imag / lam_vac)
     #T_list[i,j] and R_list[i,j] are transmission and reflection powers,
     #respectively, coming from the i'th incoherent layer, going to the j'th
     #incoherent layer. Only need to calculate this when j=i+1 or j=i-1.
@@ -735,7 +735,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
                 / T_list[0,1])
     for i in xrange(1,num_inc_layers-1):
         L = np.dot(
-           array([[1/(1-A_list[i]),0],[0,(1-A_list[i])]]),
+           array([[1/P_list[i],0],[0,P_list[i]]]),
            array([[1,-R_list[i+1,i]],
                   [R_list[i,i+1],
                    T_list[i+1,i]*T_list[i,i+1] - R_list[i+1,i]*R_list[i,i+1]]])
@@ -765,7 +765,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
         if prev_inc_index == 0: #stack starts right after semi-infinite layer.
             F = 1
         else:
-            F = VW_list[prev_inc_index][0] * (1-A_list[prev_inc_index])
+            F = VW_list[prev_inc_index][0] * P_list[prev_inc_index]
         B = VW_list[prev_inc_index+1][1]
         stackFB_list.append([F,B])
     
@@ -782,7 +782,7 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
                                             -VW_list[1][1]*T_list[1,0])
             else:
                 power_entering_list.append(
-                    VW_list[i-1][0]*(1-A_list[i-1])*T_list[i-1,i]
+                    VW_list[i-1][0]*P_list[i-1]*T_list[i-1,i]
                     - VW_list[i][1]*T_list[i,i-1])
         else: #case where this layer follows a coherent stack
             power_entering_list.append(
