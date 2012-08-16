@@ -338,8 +338,8 @@ def incoherent_test():
     d_list = [inf,10000,10200,inf]
     c_list = ['i','i','i','i']
     for pol in ['s','p']:
-        inc_absorp = array([0,0,0,0])
-        coh_absorp = array([0,0,0,0])
+        inc_absorp = array([0.,0.,0.,0.])
+        coh_absorp = array([0.,0.,0.,0.])
         num_pts = 234
         for lam_vac in linspace(40,50,num_pts):
             inc_data = inc_tmm(pol,n_list,d_list,c_list,th0,lam_vac)
