@@ -14,6 +14,14 @@ from numpy import cos, inf, zeros, array, exp, conj, nan, isnan
 import scipy as sp
 import numpy as np
 
+import sys
+
+
+# Replace 0 with VERY_SMALL whenever I want to reliably avoid divide-by-zero
+# and similar errors. On my machine, VERY_SMALL = 2e-288
+VERY_SMALL = sys.float_info.min * 1e20
+
+
 def snell(n_1,n_2,th_1):
     """
     return angle theta in layer 2 with refractive index n_2, assuming
@@ -685,6 +693,10 @@ def inc_tmm(pol,n_list,d_list,c_list,th_0,lam_vac):
         i = all_from_inc[inc_index]
         P_list[inc_index] = exp(-4 * np.pi * d_list[i]
                      * (n_list[i] * cos(th_list[i])).imag / lam_vac)
+        #For a very opaque layer, reset P to avoid divide-by-0 and similar
+        #errors.
+        if P_list[inc_index] < VERY_SMALL:
+            P_list[inc_index] = VERY_SMALL
     #T_list[i,j] and R_list[i,j] are transmission and reflection powers,
     #respectively, coming from the i'th incoherent layer, going to the j'th
     #incoherent layer. Only need to calculate this when j=i+1 or j=i-1.
