@@ -200,7 +200,7 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     th_list = list_snell(n_list,th_0)
 
     #kz is the z-component of (complex) angular wavevector for forward-moving
-    #wave.
+    #wave. Positive imaginary part means decaying.
     kz_list = 2 * np.pi * n_list * cos(th_list) / lam_vac
 
     #delta is the total phase accrued by traveling through a given layer.
@@ -208,6 +208,15 @@ def coh_tmm(pol, n_list, d_list, th_0, lam_vac):
     olderr = sp.seterr(invalid= 'ignore')
     delta = kz_list * d_list
     sp.seterr(**olderr)
+    
+    # For a very opaque layer, reset delta to avoid divide-by-0 and similar
+    # errors. The criterion imag(delta) > 35 corresponds to single-pass
+    # transmission < 1e-30 --- small enough that the exact value doesn't
+    # matter.
+    for i in xrange(1, num_layers-1):
+        if delta[i].imag > 35:
+            delta[i] = delta[i].real + 35j
+    
     #t_list[i,j] and r_list[i,j] are transmission and reflection amplitudes,
     #respectively, coming from i, going to j. Only need to calculate this when
     #j=i+1. (2D array is overkill but helps avoid confusion.)
@@ -872,3 +881,4 @@ def inc_find_absorp_analytic_fn(layer, inc_data):
     backfunc.scale(inc_data['stackFB_list'][stackindex][1])
     backfunc.flip()
     return forwardfunc.add(backfunc)
+

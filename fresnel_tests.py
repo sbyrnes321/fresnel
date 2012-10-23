@@ -23,6 +23,7 @@ def run_all():
     absorp_analytic_fn_test()
     incoherent_test()
     RT_test()
+    coh_overflow_test()
     inc_overflow_test()
 
 def df(a,b): #difference fraction
@@ -384,6 +385,24 @@ def RT_test():
 
     return
     
+def coh_overflow_test():
+    """
+    Test whether very very opaque layers will break the coherent program
+    """
+    n_list = [ 1., 2+.1j, 1+3j,  4.,  5.]
+    d_list = [inf,    50,  1e5,  50, inf]
+    lam = 200
+    alpha_d = np.imag(n_list[2]) * 4 * pi * d_list[2] / lam
+    print 'Very opaque layer: Calculation should involve e^(-', alpha_d, ')!'
+    data = coh_tmm('s',n_list,d_list,0,lam)
+    n_list2 = n_list[0:3]
+    d_list2 = d_list[0:3]
+    d_list2[-1] = inf
+    data2 = coh_tmm('s',n_list2,d_list2,0,lam)
+    print 'First entries of the following two lists should agree:'
+    print data['vw_list']
+    print data2['vw_list']
+   
 def inc_overflow_test():
     """
     Test whether very very opaque layers will break the incoherent program
@@ -403,3 +422,4 @@ def inc_overflow_test():
     print 'First entries of the following two lists should agree:'
     print data['power_entering_list']
     print data2['power_entering_list']
+
